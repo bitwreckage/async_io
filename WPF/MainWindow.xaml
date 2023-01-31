@@ -43,11 +43,19 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Button Height="24" IsEnabled="{Binding Path=IsIdle}" Click="ButtonBase_OnClick">Start Download</Button>
         <ListBox Name="FilesListBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding }" IsSynchronizedWithCurrentItem="True" SelectedValuePath="Name" HorizontalContentAlignment="Stretch" />
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal">
+            <TextBlock>
+                Overall progress:
+                <TextBlock Width="30" Text="{Binding Path=OverallProgress}" TextAlignment="Right"/>
+            </TextBlock>
+            <ProgressBar Orientation="Horizontal" Margin="5,3" IsIndeterminate="False" Width="400" Height="31" Value="{Binding Path=OverallProgress}"></ProgressBar>
+        </StackPanel>
     </Grid>
 </Window>
