@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="..\Common\**\*.cs">
+      <Link>..\Common\**\*.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>
