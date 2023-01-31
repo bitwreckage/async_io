@@ -20,9 +20,41 @@ namespace async_io
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int _numberOfFiles;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _numberOfFiles = 10;
+            FilesDownloadStatuses = new FilesDownloadViewModel();
+            for (int i = 0; i < _numberOfFiles; i++)
+            {
+                FilesDownloadStatuses.Add(new FileProgressViewModel());
+            }
+            FilesDownloadView.DataContext = FilesDownloadStatuses;
+        }
+
+        public FilesDownloadViewModel FilesDownloadStatuses { get; }
+
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            // Start the download...
+            if (FilesDownloadStatuses.IsIdle)
+            {
+                FilesDownloadStatuses.IsIdle = false;
+
+                var fileProcessor = new FileProcessor();
+                await fileProcessor.ProcessFiles(_numberOfFiles, new Progress<AggregatedProgress>(UpdateProgressUi));
+
+                FilesDownloadStatuses.IsIdle = true;
+            }
+        }
+
+        private void UpdateProgressUi(AggregatedProgress progress)
+        {
+            var specProgress = progress.SpecificProgress;
+            FilesDownloadStatuses[specProgress.WorkId].Progress = specProgress.PctComplete;
         }
     }
 }
