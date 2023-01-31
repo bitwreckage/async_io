@@ -6,18 +6,19 @@ using System.Collections.Concurrent;
 Console.Clear();
 Console.CursorVisible = false;
 
-BlockingCollection<FileProgress> progressEvents = new BlockingCollection<FileProgress>();
+using BlockingCollection<FileProgress> progressEvents = new BlockingCollection<FileProgress>();
+{
+    var timer = new Timer(ProcessReports, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(200));
 
-var timer = new Timer(ProcessReports, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(200));
+    var processor = new FileProcessor();
+    var progress = new ConsoleProgress<FileProgress>(p => ReportProgress(p));
+    int result = await processor.ProcessFiles(10, progress);
 
-var processor = new FileProcessor();
-var progress = new ConsoleProgress<FileProgress>(p => ReportProgress(p));
-int result = await processor.ProcessFiles(10, progress);
-
-await Task.Delay(TimeSpan.FromMilliseconds(200));
-Console.SetCursorPosition(0,17);
-Console.WriteLine($"Result of files processed: {result}");
-Console.CursorVisible = true;
+    await Task.Delay(TimeSpan.FromMilliseconds(200));
+    Console.SetCursorPosition(0,17);
+    Console.WriteLine($"Result of files processed: {result}");
+    Console.CursorVisible = true;
+}
 
 
 void ReportProgress(FileProgress fileProgress)

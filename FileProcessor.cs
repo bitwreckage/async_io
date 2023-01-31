@@ -17,10 +17,13 @@
 
     private async Task<int> ProcessFile(int workNumber, IProgress<FileProgress> progress)
     {
-        for (int i = 0; i <= 100; i++)
+        var totalTime = _random.Next(2, 10);
+
+        var iterations = 100;
+        for (int i = 0; i <= iterations; i++)
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(_random.Next(50,200)));
-            progress.Report(new FileProgress(workNumber, i));
+            await Task.Delay(TimeSpan.FromMilliseconds(totalTime*1000/iterations));
+            progress.Report(new FileProgress(workNumber, i*100/iterations));
         }
         
         return 1;
