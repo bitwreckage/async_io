@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 public class FileProcessor
@@ -9,20 +10,18 @@ public class FileProcessor
     private int[] _progressPerFile;
     private IProgress<AggregatedProgress> _aggregateProgress;
 
-    public async Task<int> ProcessFiles(int numberOfFiles,  IProgress<AggregatedProgress> progress)
+    public int ProcessFiles(int numberOfFiles,  IProgress<AggregatedProgress> progress)
     {
         _progressPerFile = new int[numberOfFiles];
         _aggregateProgress = progress;
         var detailProgress = new Progress<FileProgress>(p => AggregateProgress(p));
-        var tasks = new List<Task<int>>();
+        var results = new List<int>();
         for (int i = 0; i < numberOfFiles; i++)
         {
-            tasks.Add(ProcessFile(i, detailProgress));
+            results.Add(ProcessFile(i, detailProgress));
         }
 
-        await Task.WhenAll(tasks);
-
-        return tasks.Sum(t => t.Result);
+        return results.Sum();
     }
 
     private void AggregateProgress(FileProgress fileProgress)
@@ -36,14 +35,14 @@ public class FileProcessor
         _aggregateProgress.Report(new AggregatedProgress(_progressPerFile.Sum()/_progressPerFile.Length, fileProgress));
     }
 
-    private async Task<int> ProcessFile(int workNumber, IProgress<FileProgress> progress)
+    private int ProcessFile(int workNumber, IProgress<FileProgress> progress)
     {
         var totalTime = _random.Next(2, 10);
 
         var iterations = 100;
         for (int i = 0; i <= iterations; i++)
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(totalTime*1000/iterations));
+            Thread.Sleep(TimeSpan.FromMilliseconds(totalTime*1000/iterations));
             progress.Report(new FileProgress(workNumber, i*100/iterations));
         }
         

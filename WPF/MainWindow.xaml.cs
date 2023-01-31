@@ -37,15 +37,15 @@ namespace async_io
 
         public FilesDownloadViewModel FilesDownloadStatuses { get; }
 
-        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             // Start the download...
             if (FilesDownloadStatuses.IsIdle)
             {
                 FilesDownloadStatuses.IsIdle = false;
-
+// TODO: Try to remove the async stuff and test responsiveness of UI! Resize/move main window while downloading?
                 var fileProcessor = new FileProcessor();
-                await fileProcessor.ProcessFiles(_numberOfFiles, new Progress<AggregatedProgress>(UpdateProgressUi));
+                fileProcessor.ProcessFiles(_numberOfFiles, new Progress<AggregatedProgress>(UpdateProgressUi));
 
                 FilesDownloadStatuses.IsIdle = true;
             }
