@@ -1,4 +1,9 @@
-﻿public class FileProcessor
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+public class FileProcessor
 {
     private Random _random = new Random(DateTime.Now.Millisecond);
     private int[] _progressPerFile;

@@ -1,4 +1,6 @@
-﻿public class ConsoleProgress<T> : IProgress<T>
+﻿using System;
+
+public class ConsoleProgress<T> : IProgress<T>
 {
     private Action<T> _handler;
     
