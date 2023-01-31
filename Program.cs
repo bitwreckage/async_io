@@ -6,12 +6,12 @@ using System.Collections.Concurrent;
 Console.Clear();
 Console.CursorVisible = false;
 
-using BlockingCollection<FileProgress> progressEvents = new BlockingCollection<FileProgress>();
+using BlockingCollection<AggregatedProgress> progressEvents = new BlockingCollection<AggregatedProgress>();
 {
     var timer = new Timer(ProcessReports, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(200));
 
     var processor = new FileProcessor();
-    var progress = new ConsoleProgress<FileProgress>(p => ReportProgress(p));
+    var progress = new ConsoleProgress<AggregatedProgress>(p => ReportProgress(p));
     int result = await processor.ProcessFiles(10, progress);
 
     await Task.Delay(TimeSpan.FromMilliseconds(200));
@@ -21,9 +21,9 @@ using BlockingCollection<FileProgress> progressEvents = new BlockingCollection<F
 }
 
 
-void ReportProgress(FileProgress fileProgress)
+void ReportProgress(AggregatedProgress aggregatedProgress)
 {
-    progressEvents.Add(fileProgress);
+    progressEvents.Add(aggregatedProgress);
 }
 
 void ProcessReports(Object whatever)
@@ -34,17 +34,27 @@ void ProcessReports(Object whatever)
     }
 }
 
-void ProcessReport(FileProgress progress)
+void ProcessReport(AggregatedProgress progress)
 {
-    Console.SetCursorPosition(0, 5 + progress.WorkId);
-    Console.Write($"{progress.WorkId} {progress.PctComplete:000}%: ");
-    var progressChar = progress.PctComplete < 100 ? "-" : "#";
-    for (int i = 0; i < progress.PctComplete / 10; i++)
+    var specProgress = progress.SpecificProgress;
+    Console.SetCursorPosition(0, 5 + specProgress.WorkId);
+    Console.Write($"{specProgress.WorkId} {specProgress.PctComplete:000}%: ");
+    WriteProgressBar(specProgress.PctComplete);
+
+    Console.SetCursorPosition(0, 5+11);
+    Console.Write($"Overall {progress.OverallProgress:000}%: ");
+    WriteProgressBar(progress.OverallProgress);
+}
+
+void WriteProgressBar(int pctComplete)
+{
+    var progressChar = pctComplete < 100 ? "-" : "#";
+    for (int i = 0; i < pctComplete / 10; i++)
     {
         Console.Write(progressChar);
     }
 
-    if (progress.PctComplete < 100)
+    if (pctComplete < 100)
     {
         Console.Write(">");
     }
