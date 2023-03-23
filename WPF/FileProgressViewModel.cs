@@ -6,6 +6,7 @@ namespace async_io;
 public class FileProgressViewModel : INotifyPropertyChanged
 {
     private int _progress;
+    private int _threadId;
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void Notify([CallerMemberName] string? propertyName = null)
@@ -20,6 +21,18 @@ public class FileProgressViewModel : INotifyPropertyChanged
         {
             if (value == _progress) return;
             _progress = value;
+            Notify();
+        }
+    }
+
+    public int ThreadId
+    {
+        get => _threadId;
+        set
+        {
+            if (value == _threadId) return;
+            
+            _threadId = value;
             Notify();
         }
     }

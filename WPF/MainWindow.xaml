@@ -33,6 +33,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Width="30" Margin="5,3" Text="{Binding Path=Progress}" TextAlignment="Right"/>
                 <ProgressBar Orientation="Horizontal" Margin="5,3" IsIndeterminate="False" Width="300" Height="24" Value="{Binding Path=Progress}"/>
+                <TextBlock Width="30" Margin="5,3" Text="{Binding Path=ThreadId}" TextAlignment="Right"/>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>

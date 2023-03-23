@@ -55,6 +55,7 @@ namespace async_io
         {
             var specProgress = progress.SpecificProgress;
             FilesDownloadStatuses[specProgress.WorkId].Progress = specProgress.PctComplete;
+            FilesDownloadStatuses[specProgress.WorkId].ThreadId = specProgress.ThreadId;
             FilesDownloadStatuses.OverallProgress = FilesDownloadStatuses.Sum(p => p.Progress) / _numberOfFiles;
         }
     }
