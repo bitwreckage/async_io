@@ -42,10 +42,11 @@ public class FileProcessor
         var totalTime = _random.Next(2, 10);
         var threadId = Environment.CurrentManagedThreadId;
         
-        var iterations = 100;
+        var iterations = 1000;
         for (int i = 0; i <= iterations; i++)
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(totalTime*1000/iterations)).ConfigureAwait(false);
+            // await Task.Delay(TimeSpan.FromMilliseconds(totalTime*1000/iterations)).ConfigureAwait(false);
+            await Task.Delay(10);
             progress.Report(new FileProgress(workNumber, threadId, i*100/iterations));
         }
         

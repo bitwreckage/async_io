@@ -8,6 +8,8 @@ public class FilesDownloadViewModel : List<FileProgressViewModel>, INotifyProper
 {
     private bool _isIdle = true;
     private int _overallProgress;
+    private bool _processOngoing;
+    private bool _processComplete;
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void Notify([CallerMemberName] string? propertyName = null)
@@ -26,6 +28,28 @@ public class FilesDownloadViewModel : List<FileProgressViewModel>, INotifyProper
         }
     }
 
+    public bool ProcessOngoing
+    {
+        get => _processOngoing;
+        set
+        {
+            if (value == _processOngoing) return;
+            _processOngoing = value;
+            Notify();
+        }
+    }
+
+    public bool ProcessComplete
+    {
+        get => _processComplete;
+        set
+        {
+            if (value == _processComplete) return;
+            _processComplete = value;
+            Notify();
+        }
+    }
+
     public int OverallProgress
     {
         get => _overallProgress;
@@ -35,5 +59,19 @@ public class FilesDownloadViewModel : List<FileProgressViewModel>, INotifyProper
             _overallProgress = value;
             Notify();
         }
+    }
+
+    public void StartDownload()
+    {
+        IsIdle = false;
+        ProcessOngoing = true;
+        ProcessComplete = false;
+
+        foreach (var fileProgress in this)
+        {
+            fileProgress.Progress = 0;
+        }
+
+        OverallProgress = 0;
     }
 }
